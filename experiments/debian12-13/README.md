@@ -25,23 +25,23 @@ FAIL_ON_ANY=1 ./experiments/debian12-13/run-compare.sh
 
 ## What it does
 
+0. Cleans experiment output directory
 1. Builds images:
    - `experiments/debian12-13/Dockerfile.debian12`
    - `experiments/debian12-13/Dockerfile.debian13`
-2. Optionally builds remediation image:
-   - `experiments/debian12-13/Dockerfile.debian13-remediated`
-3. Captures toolchain versions (`arm-none-eabi-gcc`, `arm-none-eabi-ld`)
-4. Captures and verifies Makefile checksum across all images
-5. Runs the same build command for each image:
+   - Optionally: `experiments/debian12-13/Dockerfile.debian13-remediated`
+2. Captures toolchain versions (`arm-none-eabi-gcc`, `arm-none-eabi-ld`)
+3. Captures and verifies Makefile checksum across all images
+4. Runs the same build command for each image:
    - `make binaries BUILD=<case-output-dir>`
-6. Uses isolated output dirs under this folder:
-   - `experiments/debian12-13/out/build-debian12`
-   - `experiments/debian12-13/out/build-debian13`
-   - `experiments/debian12-13/out/build-debian13-remediated`
-7. Prints a result matrix with:
+   - Uses isolated output dirs:
+     - `experiments/debian12-13/out/build-debian12`
+     - `experiments/debian12-13/out/build-debian13`
+     - `experiments/debian12-13/out/build-debian13-remediated`
+5. Prints a result matrix with:
    - case name
    - `PASS/FAIL`
    - exit code
    - gcc/ld version lines
    - Makefile checksum
-8. Verifies that all images used the same Makefile for a fair comparison
+6. Verifies that all images used the same Makefile for a fair comparison
