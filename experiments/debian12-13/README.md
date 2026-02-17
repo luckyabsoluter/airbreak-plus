@@ -5,6 +5,7 @@ This experiment runs a fair, per-image comparison.
 - All images run the same build workflow: `make binaries`
 - Output is reported as per-image `PASS/FAIL`
 - `debian13-remediated` can be included as an extra case
+- Makefile checksum is captured and verified across all images to ensure fair comparison
 
 ## Run
 
@@ -30,14 +31,17 @@ FAIL_ON_ANY=1 ./experiments/debian12-13/run-compare.sh
 2. Optionally builds remediation image:
    - `experiments/debian12-13/Dockerfile.debian13-remediated`
 3. Captures toolchain versions (`arm-none-eabi-gcc`, `arm-none-eabi-ld`)
-4. Runs the same build command for each image:
+4. Captures and verifies Makefile checksum across all images
+5. Runs the same build command for each image:
    - `make binaries BUILD=<case-output-dir>`
-5. Uses isolated output dirs under this folder:
+6. Uses isolated output dirs under this folder:
    - `experiments/debian12-13/out/build-debian12`
    - `experiments/debian12-13/out/build-debian13`
    - `experiments/debian12-13/out/build-debian13-remediated`
-6. Prints a result matrix with:
+7. Prints a result matrix with:
    - case name
    - `PASS/FAIL`
    - exit code
    - gcc/ld version lines
+   - Makefile checksum
+8. Verifies that all images used the same Makefile for a fair comparison
