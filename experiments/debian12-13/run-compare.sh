@@ -65,17 +65,17 @@ run_in_image() {
         bash -lc "$*"
 }
 
-echo "[0/5] Clean experiment output directory"
+echo "[0/6] Clean experiment output directory"
 rm -rf "$SCRIPT_DIR/out"
 mkdir -p "$SCRIPT_DIR/out"
 
-echo "[1/5] Build images"
+echo "[1/6] Build images"
 for i in "${!NAMES[@]}"; do
     echo " - ${NAMES[$i]} (${IMAGES[$i]})"
     docker build -f "${DOCKERFILES[$i]}" -t "${IMAGES[$i]}" .
 done
 
-echo "[2/5] Capture toolchain versions"
+echo "[2/6] Capture toolchain versions"
 for i in "${!NAMES[@]}"; do
     gcc_line="$(run_in_image "${IMAGES[$i]}" "arm-none-eabi-gcc --version | head -n 1")"
     ld_line="$(run_in_image "${IMAGES[$i]}" "arm-none-eabi-ld --version | head -n 1")"
@@ -85,14 +85,14 @@ for i in "${!NAMES[@]}"; do
     echo " - ${NAMES[$i]} ld : $ld_line"
 done
 
-echo "[2.5/5] Capture and verify Makefile checksum"
+echo "[3/6] Capture and verify Makefile checksum"
 for i in "${!NAMES[@]}"; do
     makefile_sum="$(run_in_image "${IMAGES[$i]}" "sha256sum /workspace/Makefile | cut -d' ' -f1")"
     MAKEFILE_SUMS+=("$makefile_sum")
     echo " - ${NAMES[$i]} Makefile: $makefile_sum"
 done
 
-echo "[3/5] Run same build workflow for each image (fair comparison)"
+echo "[4/6] Run same build workflow for each image (fair comparison)"
 for i in "${!NAMES[@]}"; do
     outdir="${OUTDIRS[$i]}"
     set +e
@@ -109,7 +109,7 @@ for i in "${!NAMES[@]}"; do
     fi
 done
 
-echo "[4/5] Result matrix"
+echo "[5/6] Result matrix"
 for i in "${!NAMES[@]}"; do
     if [[ "${RESULTS[$i]}" == "PASS" ]]; then
         status_colored="${COLOR_PASS}${RESULTS[$i]}${COLOR_RESET}"
@@ -122,7 +122,7 @@ for i in "${!NAMES[@]}"; do
     echo "    Makefile: ${MAKEFILE_SUMS[$i]}"
 done
 
-echo "[5/5] Verify Makefile consistency"
+echo "[6/6] Verify Makefile consistency"
 first_sum="${MAKEFILE_SUMS[0]}"
 all_same=true
 for i in "${!NAMES[@]}"; do
