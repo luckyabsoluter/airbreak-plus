@@ -36,6 +36,7 @@ ASFLAGS ?= $(CFLAGS)
 CFLAGS += -Wa,-adhlns=$(<:%.c=%.lst)
 
 LDFLAGS ?= \
+	-m armelf \
 	--nostdlib \
 	--no-dynamic-linker \
 	--Ttext $($*-offset) \

@@ -76,6 +76,7 @@ CFLAGS ?= \
 ASFLAGS ?= $(CFLAGS)
 
 LDFLAGS ?= \
+	-m armelf \
 	--nostdlib \
 	--no-dynamic-linker \
 	--Ttext $($*-offset) \
